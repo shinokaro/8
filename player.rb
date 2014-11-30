@@ -4,6 +4,8 @@ class Player < Character
 
   def initialize(image)
     super(0, 0, image)
+    self.vx = 0
+    self.vy = 0
     self.durability = 1
     self.equipment = {}
     @diagonal_verocity_max = Math.sqrt(2)
@@ -14,22 +16,22 @@ class Player < Character
   end
 
   def alive?
-    self.durability > 0
+    durability > 0
   end
 
   def update_input
     if Input.x.nonzero? and Input.y.nonzero?
-      self.vx += Input.x * @diagonal_verocity if self.vx.abs < @diagonal_verocity_max
-      self.vy += Input.y * @diagonal_verocity if self.vy.abs < @diagonal_verocity_max
+      self.vx += Input.x * @diagonal_verocity if vx.abs < @diagonal_verocity_max
+      self.vy += Input.y * @diagonal_verocity if vy.abs < @diagonal_verocity_max
     else
-      self.vx += Input.x * @verocity if self.vx.abs < @verocity_max
-      self.vy += Input.y * @verocity if self.vy.abs < @verocity_max
+      self.vx += Input.x * @verocity if vx.abs < @verocity_max
+      self.vy += Input.y * @verocity if vy.abs < @verocity_max
     end
   end
 
   def fire
-    [-4, 4].map do |x|
-    bullet = Bullet.new(self.x + x, centering_vertical(Assets[:shot][0]), Assets[:shot])
+    [-4, 4].map do |fx|
+      bullet = Bullet.new(x + fx, centering_vertical(Assets[:shot][0]), Assets[:shot])
       bullet.collision = [7, 3, 8, 12]
       bullet.target = self.target
       bullet.vy = -@shot_force
@@ -42,8 +44,8 @@ class Player < Character
     when Enemy, Bullet
       o.vanish
       self.durability -= 1
-      if self.durability < 1
-        self.vanish
+      if durability < 1
+        vanish
       end
     end
   end

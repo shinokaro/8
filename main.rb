@@ -19,6 +19,7 @@ require_relative 'animative'
 require_relative 'unit'
 require_relative 'player'
 require_relative 'enemy'
+require_relative 'gun'
 require_relative 'stage'
 require_relative 'game'
 
