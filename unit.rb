@@ -1,5 +1,9 @@
 class Unit < Sprite
 
+  extend Forwardable
+
+  def_delegators :image, :width, :height
+
   attr_accessor :vx, :vy
 
   def initialize(x, y)
@@ -9,17 +13,16 @@ class Unit < Sprite
   end
 
   def update
-    update_animation
     self.x += self.vx
     self.y += self.vy
   end
 
   def centering_vertical(image)
-    self.y + (self.image.height - image.height) / 2
+    y + (height - height) / 2
   end
 
   def centering_horizontal(image)
-    self.x + (self.image.width - image.width) / 2
+    x + (width - width) / 2
   end
 
   def rad2deg(r)
