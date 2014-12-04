@@ -17,7 +17,7 @@ class Game
   end
 
   def setup(stage_data)
-    self.stage    = Stage.new(self, stage_data)
+    self.stage    = Stage.new(stage_data)
     self.player.x = (self.screen.width - self.player.image.width) / 2
     self.player.y = self.screen.height
     self.enemies  = []
