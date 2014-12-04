@@ -26,14 +26,14 @@ require_relative 'game'
 spriteset = Image.load_tiles(Graphics['spriteset.png'], 8, 8)
 
 Assets = {
-  player:    spriteset[0..3],
-  e_fighter: spriteset[8..11],
+  player:    spriteset[ 0.. 3],
+  e_fighter: spriteset[ 8..11],
   e_octopas: spriteset[12..15],
   shot:      spriteset[16..18],
   bullet:    spriteset[24..26]
 }
 
-Window.mag_filter = TEXF_POINT
+
 
 AI = {
   course_v: -> vx {
@@ -127,11 +127,12 @@ stage_data = [
 ]
 
 game = nil
-bgm = Sound.new(BGM['8.wav'])
-bgm.loop_count = -1
+bgm = Sound.new(BGM['8.wav']).tap{|sound|
+  sound.loop_count = -1
+}
 
 game_state = :title
-
+Window.mag_filter = TEXF_POINT
 Window.loop do
   case game_state
   when :title
