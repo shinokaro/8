@@ -33,7 +33,7 @@ Assets = {
   bullet: spriteset[24..26]
 }
 
-Window.mag_filter = TEXF_POINT
+
 
 AI = {
   course_v: -> vx {
@@ -126,33 +126,45 @@ stage_data = [
   ],
 ]
 
-game = nil
+game = nil #Game.instance #nil
 bgm = Sound.new(BGM['8.wav'])
 bgm.loop_count = -1
+game_state = :title
+
+Window.mag_filter = TEXF_POINT
 
 Window.loop do
-  if game
+  case game_state
+  when :title
+    Window.draw_font_ex(224, 224, "press Z key to start", Font.default)
+    game_state = :init if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
+  when :init
+    game = Game.new(stage_data.dup)
+    Input.set_key_repeat(K_Z, 6, 6)
+    bgm.play
+    game_state = :prelude
+  when :prelude
     if game.prelude.alive?
       game.prelude.resume
     else
-      if game.update
-        game.cleanup
-        game.draw
-      else
-        bgm.stop
-        Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)
-        if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
-          game = nil
-          Input.set_key_repeat(K_Z, 0, 0)
-        end
-      end
+      game_state = :play
     end
+  when :play
+    if game.update
+      game.cleanup
+      game.draw
+    else
+      game_state = :gameover
+    end
+  when :gameover
+    bgm.stop
+    Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)
+    game_state = :after if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
+  when :after
+    game = nil
+    Input.set_key_repeat(K_Z, 0, 0)
+    game_state = :title
   else
-    Window.draw_font_ex(224, 224, "press Z key to start", Font.default)
-    if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
-      game = Game.new(stage_data.dup)
-      Input.set_key_repeat(K_Z, 6, 6)
-      bgm.play
-    end
+    raise
   end
 end
