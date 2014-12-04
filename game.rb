@@ -2,18 +2,18 @@ require 'singleton'
 
 class Game
 
-#  include Singleton
+  include Singleton
 
   attr_accessor :screen, :player, :enemies, :shots, :bullets, :stage
   attr_accessor :prelude, :finale
 
-  def initialize(stage_data)
+  def initialize
     self.screen = RenderTarget.new(Window.width/2, Window.height/2)
     self.player = Player.new(Assets[:player]).tap{|player|
       player.target    = self.screen
       player.collision = [5, 3, 10, 12]
     }
-    self.setup(stage_data)
+    #self.setup
   end
 
   def setup(stage_data)

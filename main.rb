@@ -126,7 +126,7 @@ stage_data = [
   ],
 ]
 
-game = nil #Game.instance #nil
+
 bgm = Sound.new(BGM['8.wav'])
 bgm.loop_count = -1
 game_state = :title
@@ -139,20 +139,20 @@ Window.loop do
     Window.draw_font_ex(224, 224, "press Z key to start", Font.default)
     game_state = :init if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
   when :init
-    game = Game.new(stage_data.dup)
+    Game.instance.setup(stage_data.dup)
     Input.set_key_repeat(K_Z, 6, 6)
     bgm.play
     game_state = :prelude
   when :prelude
-    if game.prelude.alive?
-      game.prelude.resume
+    if Game.instance.prelude.alive?
+      Game.instance.prelude.resume
     else
       game_state = :play
     end
   when :play
-    if game.update
-      game.cleanup
-      game.draw
+    if Game.instance.update
+      Game.instance.cleanup
+      Game.instance.draw
     else
       game_state = :gameover
     end
@@ -161,7 +161,6 @@ Window.loop do
     Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)
     game_state = :after if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
   when :after
-    game = nil
     Input.set_key_repeat(K_Z, 0, 0)
     game_state = :title
   else
