@@ -49,9 +49,9 @@ class Game
       Sprite.update(shots)
       Sprite.update(enemies)
       Sprite.update(bullets)
-      Sprite.check(enemies, player)
-      Sprite.check(bullets, player)
-      Sprite.check(shots,   enemies)
+      Sprite.check(enemies, player,  :shot_player, :hit_enemy)
+      Sprite.check(bullets, player,  :shot_player, :hit_bullet)
+      Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
       true
     else
       false

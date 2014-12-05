@@ -44,6 +44,14 @@ class Bullet < Unit
     init_animation(animation_images)
   end
 
+  def shot_player(*)
+    vanish
+  end
+
+  def shot_enemy(*)
+    vanish
+  end
+
 end
 
 class Character < Unit

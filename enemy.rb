@@ -11,15 +11,21 @@ class Enemy < Character
     self.gun.fire
   end
 
-  def hit(o)
-    case o
-    when Bullet
-      o.vanish
-      self.durability -= 1
-      if self.durability < 1
-        self.vanish
-      end
+  def demolish
+    self.durability -= 1
+    if durability < 1
+      vanish
     end
+  end
+
+  def hit(*)
+    demolish
+  end
+
+  alias hit_shot hit
+
+  def shot_player(*)
+    vanish
   end
 
 end
