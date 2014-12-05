@@ -7,8 +7,8 @@ class Enemy < Character
     super
   end
 
-  def fire(player)
-    self.gun.fire(player)
+  def fire
+    self.gun.fire
   end
 
   def hit(o)
@@ -29,18 +29,18 @@ end
 
 class EnemySpawner
 
-  def initialize(game)
-    self.game = game
+  def initialize
+    self.game = Game.instance
   end
 
   def spawn(x, y, enemy_model)
-    enemy = Enemy.new(x, y, enemy_model.image)
-    enemy.collision =  enemy_model.collision
-    enemy.durability = enemy_model.durability
-    enemy.routine = enemy_model.routine[enemy, self.game]
-    enemy.target = self.game.screen
-    enemy.gun = enemy_model.gun.new(enemy)
-    enemy
+    enemy = Enemy.new(x, y, enemy_model.image).tap{|enemy|
+      enemy.collision  = enemy_model.collision
+      enemy.durability = enemy_model.durability
+      enemy.routine    = enemy_model.routine[enemy, self.game]
+      enemy.target     = self.game.screen
+      enemy.gun        = enemy_model.gun.new(enemy)
+    }
   end
 
   def game=(game)

@@ -1,23 +1,28 @@
+require 'singleton'
+
 class Game
+
+  include Singleton
 
   attr_accessor :screen, :player, :enemies, :shots, :bullets, :stage
   attr_accessor :prelude, :finale
 
-  def initialize(stage_data)
+  def initialize
     self.screen = RenderTarget.new(Window.width/2, Window.height/2)
-    self.stage = Stage.new(self, stage_data)
-    self.player = Player.new(Assets[:player])
-    self.player.target = self.screen
-    self.player.collision = [5, 3, 10, 12]
-    self.setup
+    self.player = Player.new(Assets[:player]).tap{|player|
+      player.target    = self.screen
+      player.collision = [5, 3, 10, 12]
+    }
+    #self.setup
   end
 
-  def setup
+  def setup(stage_data)
+    self.stage    = Stage.new(stage_data)
     self.player.x = (self.screen.width - self.player.image.width) / 2
     self.player.y = self.screen.height
-    self.enemies = []
-    self.shots = []
-    self.bullets = []
+    self.enemies  = []
+    self.shots    = []
+    self.bullets  = []
 
     tap do |game|
       game.prelude = Fiber.new do
@@ -30,9 +35,7 @@ class Game
         end
         game.player.vy = -0.9
       end
-      game.finale = Fiber.new do
-
-      end
+      game.finale = Fiber.new{}
     end
   end
 
@@ -43,13 +46,13 @@ class Game
       if Input.key_push?(K_Z)
         shots.push(*player.fire)
       end
-      player.update
+      Sprite.update(player)
       Sprite.update(shots)
       Sprite.update(enemies)
       Sprite.update(bullets)
       Sprite.check(enemies, player)
       Sprite.check(bullets, player)
-      Sprite.check(shots, enemies)
+      Sprite.check(shots,   enemies)
       true
     else
       false
@@ -57,11 +60,11 @@ class Game
   end
 
   def cleanup
-    shots.each do |shot|
-      shot.vanish unless self.stage === shot
+    shots.each   do |shot|
+      shot.vanish   unless self.stage === shot
     end
     enemies.each do |enemy|
-      enemy.vanish unless self.stage === enemy
+      enemy.vanish  unless self.stage === enemy
     end
     bullets.each do |bullet|
       bullet.vanish unless self.stage === bullet
@@ -75,7 +78,7 @@ class Game
     Sprite.draw(bullets)
     Sprite.draw(enemies)
     Sprite.draw(shots)
-    player.draw
+    Sprite.draw(player)
     Window.draw_scale(Window.width/4, Window.height/4, screen, 2, 2)
   end
 
