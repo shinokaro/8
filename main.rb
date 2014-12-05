@@ -151,12 +151,10 @@ Window.loop do
       game_state = :play
     end
   when :play
-    if Game.instance.update
-      Game.instance.cleanup
-      Game.instance.draw
-    else
-      game_state = :gameover
-    end
+    Game.instance.update
+    Game.instance.cleanup
+    Game.instance.draw
+    game_state = :gameover unless Game.instance.player.alive?
   when :gameover
     bgm.stop
     Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)

@@ -52,9 +52,6 @@ class Game
       Sprite.check(enemies, player,  :shot_player, :hit_enemy)
       Sprite.check(bullets, player,  :shot_player, :hit_bullet)
       Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
-      true
-    else
-      false
     end
   end
 
