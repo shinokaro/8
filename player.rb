@@ -28,8 +28,8 @@ class Player < Character
   end
 
   def fire
-    [-4, 4].map do |fx|
-      bullet = Bullet.new(x + fx, centering_vertical(Assets[:shot][0]), Assets[:shot])
+    [-4, 4].map do |x|
+      bullet = Bullet.new(self.x + x, centering_vertical(Assets[:shot][0]), Assets[:shot])
       bullet.collision = [7, 3, 8, 12]
       bullet.target = self.target
       bullet.vy = -@shot_force
@@ -37,16 +37,20 @@ class Player < Character
     end
   end
 
-  def hit(o)
-    case o
-    when Enemy, Bullet
-      o.vanish
+  def demolish
       self.durability -= 1
       if durability < 1
         vanish
       end
     end
+
+  def hit(*)
+    demolish
   end
+
+  alias hit_enemy  hit
+
+  alias hit_bullet hit
 
   def update
     super

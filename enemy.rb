@@ -7,19 +7,25 @@ class Enemy < Character
     super
   end
 
-  def fire(player)
-    self.gun.fire(player)
+  def fire
+    Game.instance.bullets.push(*self.gun.fire)
   end
 
-  def hit(o)
-    case o
-    when Bullet
-      o.vanish
+  def demolish
       self.durability -= 1
-      if self.durability < 1
-        self.vanish
+    if durability < 1
+      vanish
       end
     end
+
+  def hit(*)
+    demolish
+  end
+
+  alias hit_shot hit
+
+  def shot_player(*)
+    vanish
   end
 
 end
@@ -29,26 +35,13 @@ end
 
 class EnemySpawner
 
-  def initialize(game)
-    self.game = game
-  end
-
   def spawn(x, y, enemy_model)
-    enemy = Enemy.new(x, y, enemy_model.image)
+    enemy = Enemy.new(x, y, enemy_model.image).tap{|enemy|
     enemy.collision  = enemy_model.collision
     enemy.durability = enemy_model.durability
-    enemy.routine    = enemy_model.routine[enemy, self.game]
-    enemy.target     = self.game.screen
+      enemy.routine    = enemy_model.routine[enemy, Game.instance]
+      enemy.target     = Game.instance.screen
     enemy.gun        = enemy_model.gun.new(enemy)
-    enemy
+    }
   end
-
-  def game=(game)
-    @game = WeakRef.new(game)
-  end
-
-  def game
-    @game.__getobj__
-  end
-
 end
