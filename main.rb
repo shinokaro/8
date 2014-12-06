@@ -44,7 +44,7 @@ AI = {
           enemy.vy = Math.sin(i/300.0 * 2 * Math::PI) * 1.5
           Fiber.yield
         end
-        game.bullets.push(*enemy.fire)
+        enemy.fire
         150.times do |i|
           enemy.vy = Math.sin((150+i)/300.0 * 2 * Math::PI) * 1.5
           Fiber.yield
@@ -66,7 +66,7 @@ AI = {
         90.times do |i|
           Fiber.yield
         end
-        game.bullets.push(*enemy.fire)
+        enemy.fire
         enemy.vx = vx
         enemy.vy = 0
         150.times do |i|
