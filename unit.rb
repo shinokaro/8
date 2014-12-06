@@ -52,6 +52,11 @@ class Bullet < Unit
     vanish
   end
 
+  def update
+    super
+    update_animation
+  end
+
 end
 
 class Character < Unit
@@ -63,6 +68,11 @@ class Character < Unit
   def initialize(x, y, animation_images)
     super(x, y)
     init_animation(animation_images)
+  end
+
+  def update
+    super
+    update_animation
   end
 
 end
