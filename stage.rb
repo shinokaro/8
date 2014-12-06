@@ -5,9 +5,9 @@ class Stage < Sprite
   def initialize(wave)
     super(0, 0)
     self.collision = [-16, -16, 336, 256]
-    self.game = Game.instance
     self.enemy_spawner = EnemySpawner.new
     self.enemy_wave = wave
+    game = Game.instance
     self.sequence = Fiber.new {
       loop do
         enemy_wave.each do |enemies|
@@ -26,14 +26,6 @@ class Stage < Sprite
         end
       end
     }
-  end
-
-  def game=(game)
-    @game = WeakRef.new(game)
-  end
-
-  def game
-    @game.__getobj__
   end
 
   def update

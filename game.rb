@@ -8,15 +8,14 @@ class Game
   attr_accessor :prelude, :finale
 
   def initialize
+  end
+
+  def setup(stage_data)
     self.screen = RenderTarget.new(Window.width/2, Window.height/2)
     self.player = Player.new(Assets[:player]).tap{|player|
       player.target    = self.screen
       player.collision = [5, 3, 10, 12]
     }
-    #self.setup
-  end
-
-  def setup(stage_data)
     self.stage    = Stage.new(stage_data)
     self.player.x = (self.screen.width - self.player.image.width) / 2
     self.player.y = self.screen.height
@@ -50,12 +49,9 @@ class Game
       Sprite.update(shots)
       Sprite.update(enemies)
       Sprite.update(bullets)
-      Sprite.check(enemies, player)
-      Sprite.check(bullets, player)
-      Sprite.check(shots,   enemies)
-      true
-    else
-      false
+      Sprite.check(enemies, player,  :shot_player, :hit_enemy)
+      Sprite.check(bullets, player,  :shot_player, :hit_bullet)
+      Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
     end
   end
 

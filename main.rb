@@ -26,11 +26,11 @@ require_relative 'game'
 spriteset = Image.load_tiles(Graphics['spriteset.png'], 8, 8)
 
 Assets = {
-  player: spriteset[0..3],
-  e_fighter: spriteset[8..11],
+  player:    spriteset[ 0.. 3],
+  e_fighter: spriteset[ 8..11],
   e_octopas: spriteset[12..15],
-  shot: spriteset[16..18],
-  bullet: spriteset[24..26]
+  shot:      spriteset[16..18],
+  bullet:    spriteset[24..26]
 }
 
 
@@ -44,7 +44,7 @@ AI = {
           enemy.vy = Math.sin(i/300.0 * 2 * Math::PI) * 1.5
           Fiber.yield
         end
-        game.bullets.push(*enemy.fire)
+        enemy.fire
         150.times do |i|
           enemy.vy = Math.sin((150+i)/300.0 * 2 * Math::PI) * 1.5
           Fiber.yield
@@ -66,7 +66,7 @@ AI = {
         90.times do |i|
           Fiber.yield
         end
-        game.bullets.push(*enemy.fire)
+        enemy.fire
         enemy.vx = vx
         enemy.vy = 0
         150.times do |i|
@@ -78,9 +78,9 @@ AI = {
 }
 
 EnemyData = {
-  fighter: EnemyModel[Assets[:e_fighter], [1,5,14,16], 12, TwoWayGun, AI[:course_z][1.32, 0.8]],
+  fighter:   EnemyModel[Assets[:e_fighter], [1,5,14,16], 12, TwoWayGun, AI[:course_z][1.32, 0.8]],
   fighter_b: EnemyModel[Assets[:e_fighter], [1,5,14,16], 12, TwoWayGun, AI[:course_v][0.33]],
-  octopas: EnemyModel[Assets[:e_octopas], [1,3,14,16], 12, SingleGun, AI[:course_v][-0.33]]
+  octopas:   EnemyModel[Assets[:e_octopas], [1,3,14,16], 12, SingleGun, AI[:course_v][-0.33]]
 }
 
 stage_data = [
@@ -91,8 +91,8 @@ stage_data = [
     [-16, 20, :fighter],
     [-16, 16, :fighter],
     [-16, 12, :fighter],
-    [-16, 8, :fighter],
-    [-16, 4, :fighter]
+    [-16,  8, :fighter],
+    [-16,  4, :fighter]
   ],
   [
     [320 - 32, -16, :octopas],
@@ -101,8 +101,8 @@ stage_data = [
     [320 - 20, -16, :octopas],
     [320 - 16, -16, :octopas],
     [320 - 12, -16, :octopas],
-    [320 - 8, -16, :octopas],
-    [320 - 4, -16, :octopas]
+    [320 -  8, -16, :octopas],
+    [320 -  4, -16, :octopas]
   ],
   [
     [32, -16, :fighter_b],
@@ -111,8 +111,8 @@ stage_data = [
     [20, -16, :fighter_b],
     [16, -16, :fighter_b],
     [12, -16, :fighter_b],
-    [8, -16, :fighter_b],
-    [4, -16, :fighter_b]
+    [ 8, -16, :fighter_b],
+    [ 4, -16, :fighter_b]
   ],
   [
     [320 - 32, -16, :octopas],
@@ -121,14 +121,15 @@ stage_data = [
     [320 - 20, -16, :octopas],
     [320 - 16, -16, :octopas],
     [320 - 12, -16, :octopas],
-    [320 - 8, -16, :octopas],
-    [320 - 4, -16, :octopas]
+    [320 -  8, -16, :octopas],
+    [320 -  4, -16, :octopas]
   ],
 ]
 
 
-bgm = Sound.new(BGM['8.wav'])
-bgm.loop_count = -1
+bgm = Sound.new(BGM['8.wav']).tap{|sound|
+  sound.loop_count = -1
+}
 game_state = :title
 
 Window.mag_filter = TEXF_POINT
@@ -150,12 +151,10 @@ Window.loop do
       game_state = :play
     end
   when :play
-    if Game.instance.update
-      Game.instance.cleanup
-      Game.instance.draw
-    else
-      game_state = :gameover
-    end
+    Game.instance.update
+    Game.instance.cleanup
+    Game.instance.draw
+    game_state = :gameover unless Game.instance.player.alive?
   when :gameover
     bgm.stop
     Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)

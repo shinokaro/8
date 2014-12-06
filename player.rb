@@ -37,16 +37,20 @@ class Player < Character
     end
   end
 
-  def hit(o)
-    case o
-    when Enemy, Bullet
-      o.vanish
-      self.durability -= 1
-      if durability < 1
-        vanish
-      end
+  def demolish
+    self.durability -= 1
+    if durability < 1
+      vanish
     end
   end
+
+  def hit(*)
+    demolish
+  end
+
+  alias hit_enemy  hit
+
+  alias hit_bullet hit
 
   def update
     super
