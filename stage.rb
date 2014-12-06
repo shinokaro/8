@@ -2,11 +2,11 @@ class Stage < Sprite
 
   attr_accessor :enemy_spawner, :enemy_wave, :sequence
 
-  def initialize(game, wave)
+  def initialize(wave)
     super(0, 0)
     self.collision = [-16, -16, 336, 256]
-    self.game = game
-    self.enemy_spawner = EnemySpawner.new(self.game)
+    self.game = Game.instance
+    self.enemy_spawner = EnemySpawner.new
     self.enemy_wave = wave
     self.sequence = Fiber.new {
       loop do

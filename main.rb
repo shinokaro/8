@@ -44,7 +44,7 @@ AI = {
           enemy.vy = Math.sin(i/300.0 * 2 * Math::PI) * 1.5
           Fiber.yield
         end
-        game.bullets.push(*enemy.fire(game.player))
+        game.bullets.push(*enemy.fire)
         150.times do |i|
           enemy.vy = Math.sin((150+i)/300.0 * 2 * Math::PI) * 1.5
           Fiber.yield
@@ -66,7 +66,7 @@ AI = {
         90.times do |i|
           Fiber.yield
         end
-        game.bullets.push(*enemy.fire(game.player))
+        game.bullets.push(*enemy.fire)
         enemy.vx = vx
         enemy.vy = 0
         150.times do |i|
@@ -126,10 +126,19 @@ stage_data = [
   ],
 ]
 
+<<<<<<< HEAD
 game = nil
 bgm = Sound.new(BGM['8.wav']).tap{|sound|
   sound.loop_count = -1
 }
+=======
+
+bgm = Sound.new(BGM['8.wav'])
+bgm.loop_count = -1
+game_state = :title
+
+Window.mag_filter = TEXF_POINT
+>>>>>>> origin/master
 
 game_state = :title
 Window.mag_filter = TEXF_POINT
@@ -139,20 +148,35 @@ Window.loop do
     Window.draw_font_ex(224, 224, "press Z key to start", Font.default)
     game_state = :init if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
   when :init
+<<<<<<< HEAD
     game = Game.new(stage_data.dup)
+=======
+    Game.instance.setup(stage_data.dup)
+>>>>>>> origin/master
     Input.set_key_repeat(K_Z, 6, 6)
     bgm.play
     game_state = :prelude
   when :prelude
+<<<<<<< HEAD
     if game.prelude.alive?
       game.prelude.resume
+=======
+    if Game.instance.prelude.alive?
+      Game.instance.prelude.resume
+>>>>>>> origin/master
     else
       game_state = :play
     end
   when :play
+<<<<<<< HEAD
     if game.update
       game.cleanup
       game.draw
+=======
+    if Game.instance.update
+      Game.instance.cleanup
+      Game.instance.draw
+>>>>>>> origin/master
     else
       game_state = :gameover
     end
@@ -161,7 +185,10 @@ Window.loop do
     Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)
     game_state = :after if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
   when :after
+<<<<<<< HEAD
     game = nil
+=======
+>>>>>>> origin/master
     Input.set_key_repeat(K_Z, 0, 0)
     game_state = :title
   else

@@ -12,7 +12,12 @@ end
 
 class SingleGun < Gun
 
+<<<<<<< HEAD
   def fire(player)
+=======
+  def fire
+    player = Game.instance.player
+>>>>>>> origin/master
     bullet = Bullet.new(self.x, self.centering_vertical(Assets[:bullet][0]), Assets[:bullet])
     bullet.collision = [3, 3, 12, 12]
     bullet.target = self.target
@@ -27,7 +32,12 @@ end
 
 class TwoWayGun < Gun
 
+<<<<<<< HEAD
   def fire(player)
+=======
+  def fire
+    player = Game.instance.player
+>>>>>>> origin/master
     [-1, 1].map do |i|
       bullet = Bullet.new(self.x, centering_vertical(Assets[:bullet][0]), Assets[:bullet])
       bullet.collision = [3, 3, 12, 12]
