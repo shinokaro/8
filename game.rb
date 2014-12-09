@@ -38,10 +38,26 @@ class Game
     end
   end
 
+  def prelude_play
+    self.prelude.play if self.prelude.alive?
+  end
+
+  def prelude_play?
+    self.prelude.alive?
+  end
+
   def play
     update
     cleanup
     draw
+  end
+
+  def player_accept?
+    Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
+  end
+
+  def player_alive?
+    self.player.alive?
   end
 
   private

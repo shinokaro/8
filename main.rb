@@ -138,25 +138,22 @@ Window.loop do
   case game_state
   when :title
     Window.draw_font_ex(224, 224, "press Z key to start", Font.default)
-    game_state = :init if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
+    game_state = :init     if     Game.instance.player_accept?
   when :init
     Game.instance.setup(stage_data.dup)
     Input.set_key_repeat(K_Z, 6, 6)
     bgm.play
     game_state = :prelude
   when :prelude
-    if Game.instance.prelude.alive?
-      Game.instance.prelude.resume
-    else
-      game_state = :play
-    end
+    Game.instance.prelude_play
+    game_state = :play     unless Game.instance.prelude_play?
   when :play
     Game.instance.play
-    game_state = :gameover unless Game.instance.player.alive?
+    game_state = :gameover unless Game.instance.player_alive?
   when :gameover
     bgm.stop
     Window.draw_font_ex(256, 224, "GAMEOVER", Font.default)
-    game_state = :after if Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
+    game_state = :after    if     Game.instance.player_accept?
   when :after
     Input.set_key_repeat(K_Z, 0, 0)
     game_state = :title
