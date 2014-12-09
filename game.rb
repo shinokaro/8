@@ -38,6 +38,14 @@ class Game
     end
   end
 
+  def play
+    update
+    cleanup
+    draw
+  end
+
+  private
+
   def update
     stage.update
     if player.alive?

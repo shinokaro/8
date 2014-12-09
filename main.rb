@@ -151,9 +151,7 @@ Window.loop do
       game_state = :play
     end
   when :play
-    Game.instance.update
-    Game.instance.cleanup
-    Game.instance.draw
+    Game.instance.play
     game_state = :gameover unless Game.instance.player.alive?
   when :gameover
     bgm.stop
