@@ -39,7 +39,7 @@ class Game
   end
 
   def prelude_play
-    self.prelude.play if self.prelude.alive?
+    self.prelude.resume if self.prelude.alive?
   end
 
   def prelude_play?
