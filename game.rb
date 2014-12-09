@@ -25,14 +25,14 @@ class Game
 
     tap do |game|
       game.prelude = Fiber.new do
-      Fiber.yield
-      v = 5
-      while v > 0.9
-        v *= 0.9
-          game.player.y -= v
         Fiber.yield
-      end
-        game.player.vy = -0.9
+        v = 5
+        while v > 0.9
+          v *= 0.9
+            game.player.y -= v
+          Fiber.yield
+        end
+          game.player.vy = -0.9
       end
       game.finale = Fiber.new{}
     end
@@ -64,19 +64,13 @@ class Game
 
   def update
     stage.update
-    if player.alive?
-      player.update_input
-      if Input.key_push?(K_Z)
-        shots.push(*player.fire)
-      end
-      Sprite.update(player)
-      Sprite.update(shots)
-      Sprite.update(enemies)
-      Sprite.update(bullets)
-      Sprite.check(enemies, player,  :shot_player, :hit_enemy)
-      Sprite.check(bullets, player,  :shot_player, :hit_bullet)
-      Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
-    end
+    Sprite.update(player)
+    Sprite.update(shots)
+    Sprite.update(enemies)
+    Sprite.update(bullets)
+    Sprite.check(enemies, player,  :shot_player, :hit_enemy)
+    Sprite.check(bullets, player,  :shot_player, :hit_bullet)
+    Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
   end
 
   def cleanup

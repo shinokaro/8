@@ -25,6 +25,9 @@ class Player < Character
       self.vx += Input.x * @verocity if vx.abs < @verocity_max
       self.vy += Input.y * @verocity if vy.abs < @verocity_max
     end
+    if Input.key_push?(K_Z)
+      Game.instance.shots.push(*self.fire)
+    end
   end
 
   def fire
@@ -56,6 +59,7 @@ class Player < Character
     super
     self.vx *= 0.8
     self.vy *= 0.8
+    update_input
   end
 
 end
