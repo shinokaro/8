@@ -18,7 +18,7 @@ class Stage < Sprite
             60.times do
               Fiber.yield
             end
-            game.enemies << enemy_spawner.spawn(x, y, EnemyData[enemy_name])
+            game.join(*enemy_spawner.spawn(x, y, EnemyData[enemy_name]))
           end
           150.times do
             Fiber.yield

@@ -32,9 +32,24 @@ class Game
             game.player.y -= v
           Fiber.yield
         end
-          game.player.vy = -0.9
+        game.player.vy = -0.9
       end
       game.finale = Fiber.new{}
+    end
+  end
+
+  def join(*units)
+    units.each do |unit|
+      case unit
+      when PlayerBullet
+        self.shots.push(unit)
+      when Enemy
+        self.enemies.push(unit)
+      when Bullet
+        self.bullets.push(unit)
+      else
+        raise
+      end
     end
   end
 

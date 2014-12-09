@@ -26,13 +26,13 @@ class Player < Character
       self.vy += Input.y * @verocity if vy.abs < @verocity_max
     end
     if Input.key_push?(K_Z)
-      Game.instance.shots.push(*self.fire)
+      Game.instance.join(*self.fire)
     end
   end
 
   def fire
     [-4, 4].map do |x|
-      bullet = Bullet.new(self.x + x, centering_vertical(Assets[:shot][0]), Assets[:shot])
+      bullet = PlayerBullet.new(self.x + x, centering_vertical(Assets[:shot][0]), Assets[:shot])
       bullet.collision = [7, 3, 8, 12]
       bullet.target = self.target
       bullet.vy = -@shot_force
@@ -62,4 +62,7 @@ class Player < Character
     update_input
   end
 
+end
+
+class PlayerBullet < Bullet
 end
