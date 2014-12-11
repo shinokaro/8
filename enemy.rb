@@ -8,7 +8,7 @@ class Enemy < Character
   end
 
   def fire
-    Game.instance.bullets.push(*self.gun.fire)
+    Game.instance.join(*self.gun.fire)
   end
 
   def demolish

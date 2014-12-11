@@ -25,34 +25,67 @@ class Game
 
     tap do |game|
       game.prelude = Fiber.new do
-      Fiber.yield
-      v = 5
-      while v > 0.9
-        v *= 0.9
-          game.player.y -= v
         Fiber.yield
-      end
+        v = 5
+        while v > 0.9
+          v *= 0.9
+            game.player.y -= v
+          Fiber.yield
+        end
         game.player.vy = -0.9
       end
       game.finale = Fiber.new{}
     end
   end
 
+  def join(*units)
+    units.each do |unit|
+      case unit
+      when PlayerBullet
+        self.shots.push(unit)
+      when Enemy
+        self.enemies.push(unit)
+      when Bullet
+        self.bullets.push(unit)
+      else
+        raise
+      end
+    end
+  end
+
+  def prelude_play
+    self.prelude.resume if self.prelude.alive?
+  end
+
+  def prelude_play?
+    self.prelude.alive?
+  end
+
+  def play
+    update
+    cleanup
+    draw
+  end
+
+  def player_accept?
+    Input.key_push?(K_Z) or Input.key_push?(K_RETURN)
+  end
+
+  def player_alive?
+    self.player.alive?
+  end
+
+  private
+
   def update
     stage.update
-    if player.alive?
-      player.update_input
-      if Input.key_push?(K_Z)
-        shots.push(*player.fire)
-      end
-      Sprite.update(player)
-      Sprite.update(shots)
-      Sprite.update(enemies)
-      Sprite.update(bullets)
-      Sprite.check(enemies, player,  :shot_player, :hit_enemy)
-      Sprite.check(bullets, player,  :shot_player, :hit_bullet)
-      Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
-    end
+    Sprite.update(player)
+    Sprite.update(shots)
+    Sprite.update(enemies)
+    Sprite.update(bullets)
+    Sprite.check(enemies, player,  :shot_player, :hit_enemy)
+    Sprite.check(bullets, player,  :shot_player, :hit_bullet)
+    Sprite.check(shots,   enemies, :shot_enemy,  :hit_shot)
   end
 
   def cleanup
