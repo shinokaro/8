@@ -12,11 +12,11 @@ class Enemy < Character
   end
 
   def demolish
-      self.durability -= 1
+    self.durability -= 1
     if durability < 1
       vanish
-      end
     end
+  end
 
   def hit(*)
     demolish
@@ -36,12 +36,12 @@ end
 class EnemySpawner
 
   def spawn(x, y, enemy_model)
-    enemy = Enemy.new(x, y, enemy_model.image).tap{|enemy|
-    enemy.collision  = enemy_model.collision
-    enemy.durability = enemy_model.durability
+    Enemy.new(x, y, enemy_model.image).tap{|enemy|
+      enemy.collision  = enemy_model.collision
+      enemy.durability = enemy_model.durability
       enemy.routine    = enemy_model.routine[enemy, Game.instance]
       enemy.target     = Game.instance.screen
-    enemy.gun        = enemy_model.gun.new(enemy)
+      enemy.gun        = enemy_model.gun.new(enemy)
     }
   end
 end
